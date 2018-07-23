@@ -216,9 +216,14 @@ def generate_plate(font_height, char_ims):
 
 def generate_bg(num_bg_images):
     found = False
+    (major, minor, _) = cv2.__version__.split('.')
+    if major == '2':
+        IMG_FORMAT = cv2.CV_LOAD_IMAGE_GRAYSCALE
+    else:
+        IMG_FORMAT = cv2.IMREAD_GRAYSCALE
     while not found:
         fname = "bgs/{:08d}.jpg".format(random.randint(0, num_bg_images - 1))
-        bg = cv2.imread(fname, cv2.CV_LOAD_IMAGE_GRAYSCALE) / 255.
+        bg = cv2.imread(fname, IMG_FORMAT) / 255.
         if (bg.shape[1] >= OUTPUT_SHAPE[1] and
             bg.shape[0] >= OUTPUT_SHAPE[0]):
             found = True
@@ -287,6 +292,6 @@ if __name__ == "__main__":
     for img_idx, (im, c, p) in enumerate(im_gen):
         fname = "test/{:08d}_{}_{}.png".format(img_idx, c,
                                                "1" if p else "0")
-        print fname
+        print (fname)
         cv2.imwrite(fname, im * 255.)
 
